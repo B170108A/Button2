@@ -3,72 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Button with Confetti</title>
+    <title>Bursting Stars Effect Button</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        /* Center the button */
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+        body, html {
             margin: 0;
-            background-color: #f8f9fa;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            position: relative;
         }
 
-        /* Button styling */
-        .button-29 {
+        /* Fullscreen background */
+        .background-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            object-fit: cover;
+        }
+
+        /* Button 64 - Ice Blue Gradient */
+        .button-64 {
             align-items: center;
-            appearance: none;
-            background-color: red; /* Change to red */
+            background-image: linear-gradient(144deg, #E0F7FA, #80DEEA 50%, #00ACC1);
             border: 0;
-            border-radius: 50%; /* Makes it circular */
-            box-shadow: rgba(45, 35, 66, .4) 0 2px 4px,
-                        rgba(45, 35, 66, .3) 0 7px 13px -3px,
-                        rgba(58, 65, 111, .5) 0 -3px 0 inset;
+            border-radius: 8px;
+            box-shadow: rgba(0, 123, 164, 0.2) 0 15px 30px -5px;
             box-sizing: border-box;
-            color: #fff;
-            cursor: pointer;
+            color: #FFFFFF;
             display: flex;
-            font-family: "JetBrains Mono", monospace;
-            height: 270px; /* Bigger circular button */
-            width: 270px;
+            font-family: Phantomsans, sans-serif;
+            font-size: 32px;
+            font-weight: bold;
             justify-content: center;
-            font-size: 65px;
+            line-height: 1.2em;
+            max-width: 100%;
+            min-width: 220px;
+            padding: 8px;
             text-decoration: none;
-            transition: box-shadow .15s, transform .15s;
             user-select: none;
+            touch-action: manipulation;
+            white-space: nowrap;
+            cursor: pointer;
+            position: absolute;
+            top: 70%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
 
-        /* Hover effects */
-        .button-29:hover {
-            box-shadow: rgba(45, 35, 66, .4) 0 4px 8px,
-                        rgba(45, 35, 66, .3) 0 7px 13px -3px,
-                        rgba(0, 0, 0, 0.5) 0 -3px 0 inset;
-            transform: translateY(-2px);
+        .button-64 span {
+            background-color: #B2EBF2;
+            padding: 24px 50px;
+            border-radius: 6px;
+            width: 100%;
+            height: 100%;
+            transition: 300ms;
         }
 
-        /* Active effects */
-        .button-29:active {
-            box-shadow: rgba(0, 0, 0, 0.5) 0 3px 7px inset;
-            transform: translateY(2px);
+        .button-64:hover span {
+            background: none;
+        }
+
+        @media (min-width: 768px) {
+            .button-64 {
+                font-size: 40px;
+                min-width: 280px;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Button -->
-    <button id="confettiButton" class="button-29" role="button">CLICK TO<BR> ON</button>
+    <!-- Background Image -->
+    <img class="background-image" src="https://lh3.googleusercontent.com/d/1UpSmcz8gt9P-5tLNOzLLue_-Cf5kAK3j" alt="Background Image">
 
-    <!-- Include Confetti Library -->
+    <!-- Bursting Stars Button -->
+    <button id="starsButton" class="button-64" role="button">
+        <span class="text">CLICK TO BURST</span>
+    </button>
+
+    <!-- Canvas Confetti Library -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <script>
-        // Confetti effect on button click
-        document.getElementById('confettiButton').addEventListener('click', function () {
-            confetti({
-                particleCount: 200, // Number of confetti particles
-                spread: 90,         // Spread angle
-                origin: { y: 0.6 }  // Confetti starts slightly below center
-            });
+        // Bursting Stars Effect
+        document.getElementById('starsButton').addEventListener('click', function () {
+            const duration = 3000; // Total duration for the effect
+            const end = Date.now() + duration;
+
+            const colors = ['#FFD700', '#FFECB3', '#FFFFFF', '#80DEEA']; // Star-like colors
+
+            (function burstingStars() {
+                confetti({
+                    particleCount: 30, // Smaller bursts
+                    startVelocity: 40,
+                    spread: 80, // Wider spread for stars
+                    scalar: 1.2, // Slightly bigger particles
+                    shapes: ['circle'], // Simulates stars
+                    colors: colors,
+                    origin: { x: Math.random(), y: Math.random() * 0.5 + 0.2 }
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(burstingStars);
+                }
+            })();
+
+            // Larger central starburst after 500ms
+            setTimeout(() => {
+                confetti({
+                    particleCount: 50,
+                    startVelocity: 50,
+                    spread: 100,
+                    scalar: 1.5,
+                    shapes: ['circle'],
+                    colors: colors,
+                    origin: { x: 0.5, y: 0.5 } // Center position
+                });
+            }, 500);
         });
     </script>
 </body>
